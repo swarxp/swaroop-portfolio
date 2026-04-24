@@ -1,28 +1,924 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- SEO Meta Tags -->
-    <title>Swaroop Warade</title>
-    <meta name="description" content="Portfolio of Swaroop Warade - B.E. student in Electronics and Computer Science at VIT, specializing in full-stack development and embedded systems." />
-    <meta name="keywords" content="Swaroop Warade, Electronics Engineer, Computer Science, Full Stack Developer, React, MERN Stack, Embedded Systems" />
-    <meta name="author" content="Swaroop Warade" />
-    
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="Swaroop Warade | Electronics & Computer Science Engineer" />
-    <meta property="og:description" content="Portfolio showcasing projects in full-stack development and embedded systems" />
-    <meta property="og:type" content="website" />
-    
-    <!-- Twitter Card Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Swaroop Warade | Portfolio" />
-    <meta name="twitter:description" content="Electronics & Computer Science Engineer specializing in full-stack development" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Swaroop Warade</title>
+<meta name="description" content="Software engineer specializing in full-stack development and embedded systems. B.E. student in Electronics and Computer Science at VIT." />
+<meta name="keywords" content="Swaroop Warade, Software Engineer, Full Stack Developer, React, MERN Stack, Embedded Systems" />
+<meta name="author" content="Swaroop Warade" />
+<meta property="og:title" content="Swaroop Warade — Software Engineer" />
+<meta property="og:description" content="Full-stack developer & embedded systems engineer. Building at the intersection of hardware and software." />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Swaroop Warade" />
+<meta name="twitter:description" content="Software Engineer · Full Stack · Embedded Systems" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --bg-card: #111111;
+    --bg-hover: #161616;
+    --text: #e8e8e8;
+    --text-muted: #666;
+    --text-dim: #3a3a3a;
+    --accent: #3ddc84;
+    --accent-dim: rgba(61,220,132,0.12);
+    --accent-border: rgba(61,220,132,0.25);
+    --border: #1e1e1e;
+    --border-hover: #2a2a2a;
+    --mono: 'DM Mono', 'JetBrains Mono', monospace;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── Navbar ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transition: border-color 0.3s;
+  }
+
+  .nav-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-resume {
+    font-family: var(--mono) !important;
+    font-size: 12px !important;
+    color: var(--accent) !important;
+    border: 1px solid var(--accent-border) !important;
+    padding: 5px 12px !important;
+    border-radius: 4px !important;
+    transition: background 0.2s !important;
+  }
+  .nav-resume:hover { background: var(--accent-dim) !important; }
+
+  /* ── Layout ── */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  section {
+    padding: 80px 0;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Hero ── */
+  #hero {
+    padding: 140px 0 80px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 48px;
+    align-items: start;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-monogram {
+    width: 120px;
+    height: 140px;
+    border: 1px solid var(--border-hover);
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .hero-monogram img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  h1 span {
+    font-weight: 500;
+  }
+
+  .hero-title {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    letter-spacing: 0.02em;
+  }
+
+  .hero-bio {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.75;
+    max-width: 520px;
+    margin-bottom: 32px;
+  }
+
+  .hero-links {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .link-pill {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    letter-spacing: 0.03em;
+  }
+
+  .link-pill:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+    background: var(--bg-card);
+  }
+
+  .link-pill.accent {
+    color: var(--accent);
+    border-color: var(--accent-border);
+  }
+
+  .link-pill.accent:hover {
+    background: var(--accent-dim);
+  }
+
+  /* ── Section headers ── */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    max-width: 80px;
+  }
+
+  /* ── About ── */
+  .about-text {
+    font-size: 16px;
+    line-height: 1.85;
+    color: #a0a0a0;
+    max-width: 640px;
+  }
+
+  .about-text strong {
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  /* ── Experience ── */
+  .exp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .exp-card {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px 28px;
+    transition: background 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .exp-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .exp-card:hover {
+    background: var(--bg-card);
+    border-color: var(--border-hover);
+  }
+
+  .exp-card:hover::before { opacity: 1; }
+
+  .exp-meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+
+  .exp-company {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .exp-company:hover { text-decoration: underline; }
+
+  .exp-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  .exp-role {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .exp-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .exp-desc li {
+    margin-bottom: 4px;
+    padding-left: 1em;
+    position: relative;
+    list-style: none;
+  }
+
+  .exp-desc li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--text-dim);
+  }
+
+  .exp-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  /* ── Skills ── */
+  .skills-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .skills-row {
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+
+  .skills-group-name {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    min-width: 90px;
+    flex-shrink: 0;
+  }
+
+  .skills-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .skill-pill {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 4px 10px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .skill-pill:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+  }
+
+  /* ── Projects ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .project-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    transition: border-color 0.2s, background 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .project-card:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-hover);
+  }
+
+  .project-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .project-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .project-links {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .project-link {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+
+  .project-link:hover {
+    color: var(--accent);
+    border-color: var(--accent-border);
+  }
+
+  .project-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+
+  .tags {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Education ── */
+  .edu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .edu-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+  }
+
+  .edu-card-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .edu-degree {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .edu-field {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .edu-institution {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .edu-years {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .edu-cgpa {
+    margin-top: 12px;
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    border-radius: 3px;
+    padding: 3px 10px;
+  }
+
+  /* ── Contact ── */
+  .contact-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .contact-email {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .contact-email:hover {
+    color: var(--accent);
+    border-color: var(--accent-border);
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 12px;
+  }
+
+  /* ── Footer ── */
+  footer {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.03em;
+  }
+
+  .footer-made {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .footer-made span {
+    color: var(--accent);
+  }
+
+  /* ── Cert badge ── */
+  .cert-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    max-width: 500px;
+  }
+
+  .cert-badge-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #FF9900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: #000;
+  }
+
+  .cert-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .cert-level {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #FF9900;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    #hero {
+      grid-template-columns: 1fr;
+      padding-top: 100px;
+    }
+
+    .hero-monogram {
+      order: -1;
+      width: 56px;
+      height: 56px;
+      font-size: 14px;
+    }
+
+    .nav-links {
+      display: none;
+    }
+
+    h1 { font-size: 2rem; }
+
+    .skills-row {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .skills-group-name {
+      min-width: unset;
+    }
+  }
+
+  /* scroll animation stagger */
+  section:nth-child(2) { transition-delay: 0.05s; }
+  section:nth-child(3) { transition-delay: 0.1s; }
+  section:nth-child(4) { transition-delay: 0.05s; }
+
+  /* last section no border */
+  section:last-of-type {
+    border-bottom: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">SW</a>
+    <ul class="nav-links">
+      <li><a href="#about">about</a></li>
+      <li><a href="#experience">work</a></li>
+      <li><a href="#skills">skills</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#education">education</a></li>
+      <li><a href="#contact">contact</a></li>
+      <li><a href="https://drive.google.com/file/d/1v504dA1XC2PTlyMYDuLF0dwY8nPidMen/view?usp=sharing" target="_blank" rel="noopener" class="nav-resume">résumé ↗</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+  <!-- Hero -->
+  <section id="hero">
+    <div>
+      <p class="hero-label">available for opportunities</p>
+      <h1><span>Swaroop</span> Warade</h1>
+      <p class="hero-title">Software Engineer · Full Stack · Embedded Systems</p>
+      <p class="hero-bio">
+        Building at the intersection of hardware and software. B.E. student in Electronics and Computer Science at VIT, crafting full-stack applications and embedded solutions that bridge the physical and digital worlds.
+      </p>
+      <div class="hero-links">
+        <a href="https://github.com/swarxp" target="_blank" rel="noopener" class="link-pill">GitHub ↗</a>
+        <a href="https://linkedin.com/in/swaroopwarade" target="_blank" rel="noopener" class="link-pill">LinkedIn ↗</a>
+        <a href="mailto:waradeswaroop@gmail.com" class="link-pill accent">waradeswaroop@gmail.com</a>
+      </div>
+    </div>
+    <div class="hero-monogram"><img src="data:image/png;base64,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" alt="Swaroop Warade" /></div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <p class="section-label">about</p>
+    <p class="about-text">
+      I'm a final-year Electronics and Computer Science student at VIT, equally at home writing React frontends and flashing firmware onto STM32 microcontrollers. My work spans <strong>MERN stack applications</strong>, <strong>REST API design</strong>, and <strong>autonomous embedded systems</strong>. I've shipped production code as a software engineering intern — identifying critical security vulnerabilities and integrating bot-mitigation infrastructure that protected over 850 accounts. I'm currently pursuing opportunities where I can build meaningful products end-to-end, from the silicon up to the browser.
+    </p>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience">
+    <p class="section-label">work experience</p>
+    <div class="exp-list">
+      <div class="exp-card">
+        <div class="exp-meta">
+          <a href="#" class="exp-company">ITJobxs Pvt. Ltd.</a>
+          <span class="exp-date">Apr – Jul 2025 · Remote</span>
+        </div>
+        <p class="exp-role">Software Engineering Intern</p>
+        <ul class="exp-desc">
+          <li>Developed a responsive frontend portal for interview insights using Bootstrap and JavaScript, optimising for cross-device compatibility and interactive UI elements.</li>
+          <li>Identified bot patterns and implemented SQL query optimisation and PHP-based filtering to block 850+ fraudulent registrations during a critical spam crisis.</li>
+          <li>Enhanced platform security via Google reCAPTCHA integration, eliminating automated attacks and ensuring 100% data integrity within the MySQL database.</li>
+        </ul>
+        <div class="exp-tags">
+          <span class="tag">Bootstrap</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">PHP</span>
+          <span class="tag">MySQL</span>
+          <span class="tag">reCAPTCHA</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills">
+    <p class="section-label">skills</p>
+    <div class="skills-groups">
+      <div class="skills-row">
+        <span class="skills-group-name">languages</span>
+        <div class="skills-pills">
+          <span class="skill-pill">C/C++</span>
+          <span class="skill-pill">Python</span>
+          <span class="skill-pill">Java</span>
+          <span class="skill-pill">JavaScript</span>
+          <span class="skill-pill">SQL</span>
+        </div>
+      </div>
+      <div class="skills-row">
+        <span class="skills-group-name">frameworks</span>
+        <div class="skills-pills">
+          <span class="skill-pill">React.js</span>
+          <span class="skill-pill">Node.js</span>
+          <span class="skill-pill">Express.js</span>
+          <span class="skill-pill">Bootstrap</span>
+        </div>
+      </div>
+      <div class="skills-row">
+        <span class="skills-group-name">tools</span>
+        <div class="skills-pills">
+          <span class="skill-pill">AWS</span>
+          <span class="skill-pill">Linux</span>
+          <span class="skill-pill">Git</span>
+          <span class="skill-pill">MongoDB</span>
+          <span class="skill-pill">MySQL</span>
+        </div>
+      </div>
+      <div class="skills-row">
+        <span class="skills-group-name">embedded</span>
+        <div class="skills-pills">
+          <span class="skill-pill">STM32</span>
+          <span class="skill-pill">ARM Keil</span>
+          <span class="skill-pill">PWM</span>
+          <span class="skill-pill">Sensor Integration</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects">
+    <p class="section-label">projects</p>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-name">Bookhub</span>
+          <div class="project-links">
+            <a href="https://github.com/swarxp/bookhub-lms" target="_blank" rel="noopener" class="project-link">source ↗</a>
+          </div>
+        </div>
+        <p class="project-desc">Full-stack library management system with comprehensive CRUD functionality. RESTful APIs built with Express.js, MongoDB database, deployed on Vercel.</p>
+        <div class="tags">
+          <span class="tag">MongoDB</span>
+          <span class="tag">Express.js</span>
+          <span class="tag">React.js</span>
+          <span class="tag">Node.js</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-name">Movie Explorer</span>
+          <div class="project-links">
+            <a href="https://github.com/swarxp/ReactProject-MovieApp" target="_blank" rel="noopener" class="project-link">source ↗</a>
+          </div>
+        </div>
+        <p class="project-desc">High-performance movie discovery platform integrating the TMDb API for real-time search, filtering, and trailer playback. Built with Vite for fast load times.</p>
+        <div class="tags">
+          <span class="tag">React.js</span>
+          <span class="tag">Vite</span>
+          <span class="tag">TMDb API</span>
+          <span class="tag">JavaScript</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-name">Fire Extinguisher Robot</span>
+        </div>
+        <p class="project-desc">Autonomous hardware-software integrated robot using STM32 + C++. Flame and temperature sensors for real-time fire detection; PWM motor control for precise navigation.</p>
+        <div class="tags">
+          <span class="tag">STM32</span>
+          <span class="tag">C++</span>
+          <span class="tag">ARM Keil</span>
+          <span class="tag">PWM</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section id="education">
+    <p class="section-label">education &amp; research</p>
+    <div class="edu-grid">
+
+      <div class="edu-card">
+        <p class="edu-card-label">degree</p>
+        <p class="edu-degree">Bachelor of Technology</p>
+        <p class="edu-field">Electronics and Computer Science</p>
+        <p class="edu-institution">Vellore Institute of Technology (VIT)</p>
+        <p class="edu-years">2022 – 2026</p>
+      </div>
+
+      <div class="edu-card">
+        <p class="edu-card-label">research</p>
+        <p class="edu-degree">Semiconductor Wafer Defect Identification</p>
+        <p class="edu-institution" style="margin-top:8px;">Contributed to research on advanced defect detection methodologies in semiconductor manufacturing, bridging electronics and computer science domains.</p>
+      </div>
+
+      <div class="cert-row">
+        <div class="cert-badge-icon">AWS</div>
+        <div>
+          <p class="cert-name">AWS Certified Cloud Practitioner</p>
+          <p class="cert-level">Foundational</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <p class="section-label">contact</p>
+    <div class="contact-wrap">
+      <a href="mailto:waradeswaroop@gmail.com" class="contact-email">waradeswaroop@gmail.com</a>
+      <div class="contact-links">
+        <a href="https://github.com/swarxp" target="_blank" rel="noopener" class="link-pill">GitHub ↗</a>
+        <a href="https://linkedin.com/in/swaroopwarade" target="_blank" rel="noopener" class="link-pill">LinkedIn ↗</a>
+        <a href="https://drive.google.com/file/d/1v504dA1XC2PTlyMYDuLF0dwY8nPidMen/view?usp=sharing" target="_blank" rel="noopener" class="link-pill accent">résumé ↗</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="footer-copy">© 2025 Swaroop Warade</span>
+  <span class="footer-made">built with <span>React + Vite</span> · deployed on <span>Vercel</span></span>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('section').forEach(s => observer.observe(s));
+
+  document.getElementById('hero').classList.add('visible');
+</script>
+
+</body>
 </html>
