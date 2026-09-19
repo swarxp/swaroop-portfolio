@@ -1,43 +1,26 @@
-import { FaHeart } from 'react-icons/fa';
+import { FaHeart, FaGithub, FaLinkedin } from 'react-icons/fa';
 
-const Footer = () => {
-    const currentYear = new Date().getFullYear();
-
-    return (
-        <footer className="bg-dark-200 border-t border-gray-800">
-            <div className="max-w-7xl mx-auto px-6 py-8">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                    {/* Copyright */}
-                    <p className="text-gray-400 text-sm flex items-center gap-2">
-                        © {currentYear} Swaroop Warade. Built with{' '}
-                        <FaHeart className="text-red-500 animate-pulse" /> using React & Tailwind CSS
-                    </p>
-
-                    {/* Quick Links */}
-                    <div className="flex items-center gap-6">
-                        <a
-                            href="#skills"
-                            className="text-gray-400 hover:text-primary transition-colors text-sm"
-                        >
-                            Skills
-                        </a>
-                        <a
-                            href="#projects"
-                            className="text-gray-400 hover:text-primary transition-colors text-sm"
-                        >
-                            Projects
-                        </a>
-                        <a
-                            href="#contact"
-                            className="text-gray-400 hover:text-primary transition-colors text-sm"
-                        >
-                            Contact
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    );
-};
+const Footer = () => (
+  <footer className="border-t py-10 text-center"
+    style={{ borderColor: 'rgba(255,255,255,0.05)', background: 'rgba(5,5,5,0.8)' }}>
+    <div className="font-orbitron text-lg gradient-text font-bold mb-3">SW</div>
+    <p className="font-mono text-xs text-gray-600 flex items-center justify-center gap-2">
+      Built with <FaHeart className="text-red-500 animate-pulse" size={10} /> using React & Tailwind CSS
+    </p>
+    <p className="font-mono text-xs text-gray-700 mt-1">
+      © {new Date().getFullYear()} Swaroop Warade. All rights reserved.
+    </p>
+    <div className="flex justify-center gap-4 mt-4">
+      <a href="https://github.com/swarxp" target="_blank" rel="noopener noreferrer"
+        className="text-gray-600 hover:text-white transition-colors">
+        <FaGithub size={16} />
+      </a>
+      <a href="https://linkedin.com/in/swaroopwarade" target="_blank" rel="noopener noreferrer"
+        className="text-gray-600 hover:text-blue-400 transition-colors">
+        <FaLinkedin size={16} />
+      </a>
+    </div>
+  </footer>
+);
 
 export default Footer;

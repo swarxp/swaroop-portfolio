@@ -1,90 +1,176 @@
-import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
 
-const skills = {
-    languages: ['C/C++', 'Python', 'Java', 'JavaScript', 'SQL'],
-    frameworks: ['React.js', 'Node.js', 'Express.js'],
-    tools: ['AWS', 'Linux', 'Git', 'Bootstrap']
+const SKILLS = {
+  Languages: {
+    color: '#0EA5E9',
+    items: [
+      { name: 'C/C++', level: 90 },
+      { name: 'Python', level: 85 },
+      { name: 'Java', level: 80 },
+      { name: 'JavaScript', level: 88 },
+      { name: 'SQL', level: 75 },
+    ],
+  },
+  Frameworks: {
+    color: '#10B981',
+    items: [
+      { name: 'React.js', level: 88 },
+      { name: 'Node.js', level: 82 },
+      { name: 'Express.js', level: 80 },
+    ],
+  },
+  Tools: {
+    color: '#8B5CF6',
+    items: [
+      { name: 'AWS', level: 78 },
+      { name: 'Linux', level: 80 },
+      { name: 'Git', level: 85 },
+      { name: 'Bootstrap', level: 82 },
+    ],
+  },
 };
 
-const SkillTag = ({ skill, index, category }) => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-100px" });
+const SkillBar = ({ name, level, color, delay }) => {
+  const [hovered, setHovered] = useState(false);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
 
-    const colors = {
-        languages: 'border-primary/50 hover:border-primary hover:bg-primary/10 hover:shadow-primary/50',
-        frameworks: 'border-accent/50 hover:border-accent hover:bg-accent/10 hover:shadow-accent/50',
-        tools: 'border-blue-400/50 hover:border-blue-400 hover:bg-blue-400/10 hover:shadow-blue-400/50'
-    };
-
-    return (
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: -20 }}
+      animate={isInView ? { opacity: 1, x: 0 } : {}}
+      transition={{ delay, duration: 0.5 }}
+      className="group"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div className="flex justify-between mb-1.5">
+        <span className="font-mono text-sm text-gray-300 group-hover:text-white transition-colors">{name}</span>
+        <span className="font-mono text-xs" style={{ color, opacity: hovered ? 1 : 0.6, transition: 'opacity 0.3s' }}>
+          {level}%
+        </span>
+      </div>
+      <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
         <motion.div
-            ref={ref}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className={`px-6 py-3 glass rounded-lg border-2 ${colors[category]} transition-all duration-300 hover:scale-110 cursor-default`}
+          initial={{ width: 0 }}
+          animate={isInView ? { width: `${level}%` } : {}}
+          transition={{ duration: 1, delay: delay + 0.2, ease: 'easeOut' }}
+          className="h-full rounded-full relative"
+          style={{ background: `linear-gradient(90deg, ${color}80, ${color})` }}
         >
-            <span className="font-medium text-lg">{skill}</span>
+          {hovered && (
+            <motion.div
+              className="absolute inset-0 rounded-full"
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 1, repeat: Infinity }}
+              style={{ background: `linear-gradient(90deg, transparent, ${color}60, transparent)` }}
+            />
+          )}
         </motion.div>
-    );
+      </div>
+    </motion.div>
+  );
+};
+
+const CategoryCard = ({ category, data, index }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+
+  const onMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePos({
+      x: ((e.clientX - rect.left) / rect.width) * 100,
+      y: ((e.clientY - rect.top) / rect.height) * 100,
+    });
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: index * 0.15 }}
+      onMouseMove={onMouseMove}
+      className="relative glass rounded-2xl p-7 overflow-hidden"
+      style={{ '--mouse-x': `${mousePos.x}%`, '--mouse-y': `${mousePos.y}%`, borderTop: `2px solid ${data.color}40` }}
+    >
+      <div className="card-shine" />
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-2 h-8 rounded-full" style={{ background: data.color }} />
+        <h3 className="font-orbitron text-lg font-bold" style={{ color: data.color }}>{category}</h3>
+        <span className="font-mono text-xs text-gray-600 ml-auto">{data.items.length} skills</span>
+      </div>
+      <div className="space-y-4">
+        {data.items.map((skill, i) => (
+          <SkillBar key={skill.name} {...skill} color={data.color} delay={index * 0.1 + i * 0.08} />
+        ))}
+      </div>
+    </motion.div>
+  );
+};
+
+// Floating marquee of all skills
+const SkillMarquee = () => {
+  const all = Object.values(SKILLS).flatMap(c => c.items.map(i => ({ ...i, color: c.color })));
+  const doubled = [...all, ...all];
+  return (
+    <div className="overflow-hidden py-4" style={{ maskImage: 'linear-gradient(90deg, transparent, black 10%, black 90%, transparent)' }}>
+      <motion.div
+        className="flex gap-3 w-max"
+        animate={{ x: [0, -50 * all.length] }}
+        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+      >
+        {doubled.map((s, i) => (
+          <span
+            key={i}
+            className="skill-tag inline-flex items-center gap-1.5 glass px-4 py-2 rounded-full font-mono text-xs whitespace-nowrap"
+            style={{ borderColor: `${s.color}30`, color: s.color }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: s.color }} />
+            {s.name}
+          </span>
+        ))}
+      </motion.div>
+    </div>
+  );
 };
 
 const Skills = () => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-60px' });
 
-    return (
-        <section id="skills" className="section-container">
-            <motion.div
-                ref={ref}
-                initial={{ opacity: 0, y: 50 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ duration: 0.8 }}
-            >
-                <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center">
-                    <span className="gradient-text">Skills & Technologies</span>
-                </h2>
-                <p className="text-gray-400 text-center mb-12 text-lg">
-                    My technical toolkit spanning software and hardware
-                </p>
+  return (
+    <section id="skills" className="section-container">
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : {}}
+      >
+        <div className="section-tag justify-center">Skills & Technologies</div>
+        <h2 className="text-4xl md:text-5xl font-black text-center mb-4 font-orbitron">
+          <span className="gradient-text">My Arsenal</span>
+        </h2>
+        <p className="text-center text-gray-500 font-mono text-sm mb-12">
+          From silicon wafers to React renders
+        </p>
 
-                {/* Bento Grid Layout */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {/* Languages */}
-                    <div className="glass rounded-2xl p-8 border-l-4 border-primary">
-                        <h3 className="text-2xl font-bold mb-6 text-primary">Languages</h3>
-                        <div className="flex flex-wrap gap-3">
-                            {skills.languages.map((skill, index) => (
-                                <SkillTag key={skill} skill={skill} index={index} category="languages" />
-                            ))}
-                        </div>
-                    </div>
+        {/* Marquee */}
+        <div className="mb-12">
+          <SkillMarquee />
+        </div>
 
-                    {/* Frameworks */}
-                    <div className="glass rounded-2xl p-8 border-l-4 border-accent">
-                        <h3 className="text-2xl font-bold mb-6 text-accent">Frameworks</h3>
-                        <div className="flex flex-wrap gap-3">
-                            {skills.frameworks.map((skill, index) => (
-                                <SkillTag key={skill} skill={skill} index={index} category="frameworks" />
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Tools */}
-                    <div className="glass rounded-2xl p-8 border-l-4 border-blue-400">
-                        <h3 className="text-2xl font-bold mb-6 text-blue-400">Tools & Platforms</h3>
-                        <div className="flex flex-wrap gap-3">
-                            {skills.tools.map((skill, index) => (
-                                <SkillTag key={skill} skill={skill} index={index} category="tools" />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </motion.div>
-        </section>
-    );
+        {/* Skill cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {Object.entries(SKILLS).map(([cat, data], i) => (
+            <CategoryCard key={cat} category={cat} data={data} index={i} />
+          ))}
+        </div>
+      </motion.div>
+    </section>
+  );
 };
 
 export default Skills;
